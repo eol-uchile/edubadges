@@ -1,0 +1,12 @@
+FROM mysql:5.7
+ADD init.sql /docker-entrypoint-initdb.d/init.sql
+RUN echo "USE mysql;" > /docker-entrypoint-initdb.d/timezones.sql &&  mysql_tzinfo_to_sql /usr/share/zoneinfo >> /docker-entrypoint-initdb.d/timezones.sql
+EXPOSE 3306
+# CMD ["mysqld"]
+
+# FROM mysql:8
+#From mysql
+# COPY docker-entrypoint.sh /usr/local/bin/
+# RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+# ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+# RUN mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root --password=pass mysql

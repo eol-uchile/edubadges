@@ -1,0 +1,63 @@
+version: '3'
+services:
+  db:
+    build:
+      dockerfile: Mysql_Dockerfile
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_DATABASE: badgr
+      # MYSQL_USER: root
+      # MYSQL_PASSWORD: pass
+      MYSQL_PORT: 3306
+      MYSQL_HOST: db
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "127.0.0.1"]
+      timeout: 20s
+      retries: 10
+    ports:
+      - 3306:3306
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    # command: mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root --password=pass mysql
+  
+  backend:
+    depends_on:
+      - db
+        # condition: service_completed_successfully
+    build:
+      context: ./edubadges-server
+      dockerfile: Dockerfile
+    # restart: always
+    env_file:
+      - ./env_vars.sh
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./edubadges-server:/app
+    environment:
+      DATABASE_URL: mysql://root:pass@db:3306/badgr
+      BADGR_DB_NAME: badgr
+      BADGR_DB_USER: root
+      BADGR_DB_PASSWORD: pass
+      BADGR_DB_HOST: db
+      BADGR_DB_PORT: 3306
+      LANG: en_US.UTF-8
+      LANGUAGE: en_US:en
+      LC_ALL: en_US.UTF-8
+
+
+      # Add other environment variables as needed
+
+  frontend:
+    build:
+      context: ./edubadges-ui
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./edubadges-ui:/app
+
+volumes:
+    db_data: {}
