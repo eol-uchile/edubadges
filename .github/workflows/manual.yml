@@ -1,10 +1,8 @@
 name: Add issues as items to project
-
 on:
   issues:
     types:
       - opened
-
 jobs:
   add-to-project:
     name: Add issue to project
@@ -15,5 +13,5 @@ jobs:
           # You can target a project in a different organization
           # to the issue
           project-url: https://github.com/orgs/eol-uchile/projects/2
-          github-token: ${{ secrets }}
-          label-operator: OR
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      
