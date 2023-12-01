@@ -5,13 +5,13 @@ on:
       - opened
 jobs:
   add-to-project:
-    name: Add issue to project
+    name: Add issue to project from ${{ github.repository }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/add-to-project@v0.5.0
         with:
           # You can target a project in a different organization
           # to the issue
-          project-url: https://github.com/orgs/eol-uchile/projects/2
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          project-url: ${{ vars.DEVELOP_PROJECT_URL }}
+          github-token: ${{ secrets.PAT }}
       
