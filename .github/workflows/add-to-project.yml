@@ -3,6 +3,7 @@ on:
   issues:
     types:
       - opened
+      - reopened
 jobs:
   add-to-project:
     name: Add issue to project from ${{ github.repository }}
